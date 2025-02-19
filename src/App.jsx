@@ -7,7 +7,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [epsilon, setEpsilon] = useState(0.2); // 可调节 ε 值
-
+  const [selectedDefense, setSelectedDefense] = useState("auto"); // 預設為 Auto
   // 处理用户上传的图片
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -18,30 +18,31 @@ const App = () => {
   // 处理上传并进行防御
   const handleUpload = async () => {
     if (!image) {
-      alert("请先选择一张图片!");
+      alert("請先選擇一張圖片!");
       return;
     }
-
+  
     setLoading(true);
     const formData = new FormData();
     formData.append("file", image);
-
+    formData.append("defense_method", selectedDefense); // 傳遞防禦方式
+  
     try {
       const response = await fetch("http://localhost:8000/defend/", {
         method: "POST",
         body: formData,
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to process the image.");
       }
-
+  
       const imageBlob = await response.blob();
       const imageUrl = URL.createObjectURL(imageBlob);
       setDefendedImage(imageUrl);
     } catch (error) {
       console.error("Error processing image:", error);
-      alert("处理图片时出错，请重试!");
+      alert("處理圖片時出錯，請重試!");
     } finally {
       setLoading(false);
     }
@@ -66,21 +67,23 @@ const App = () => {
       alert("請先執行防禦，然後再分類!");
       return;
     }
-  
+
     try {
       // 下載 Blob 並轉換為 File
       const response = await fetch(defendedImage);
       const blob = await response.blob();
-      const defendedFile = new File([blob], "defended_image.png", { type: "image/png" });
-  
+      const defendedFile = new File([blob], "defended_image.png", {
+        type: "image/png",
+      });
+
       const formData = new FormData();
       formData.append("file", defendedFile);
-  
+
       const classifyResponse = await fetch("http://127.0.0.1:8000/classify/", {
         method: "POST",
         body: formData,
       });
-  
+
       const result = await classifyResponse.json();
       alert(`防禦後的圖片預測結果: ${result.predicted_label}`);
     } catch (error) {
@@ -150,7 +153,11 @@ const App = () => {
         </button>
         {imageUrl && (
           <div className="mt-4">
-            <img src={imageUrl} alt="Adversarial Example" className="w-64 h-auto" />
+            <img
+              src={imageUrl}
+              alt="Adversarial Example"
+              className="w-64 h-auto"
+            />
             <a href={imageUrl} download="adversarial_example.png">
               <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">
                 Download
@@ -165,9 +172,26 @@ const App = () => {
         <h2 className="text-lg font-semibold">Upload Image for Defense</h2>
         <input type="file" onChange={handleImageChange} className="mt-2" />
         {preview && (
-          <img src={preview} alt="Uploaded Preview" className="w-64 h-auto mt-2" />
+          <img
+            src={preview}
+            alt="Uploaded Preview"
+            className="w-64 h-auto mt-2"
+          />
         )}
       </div>
+
+      <label>
+        Choose Defense Method:
+        <select
+          value={selectedDefense}
+          onChange={(e) => setSelectedDefense(e.target.value)}
+        >
+          <option value="gaussian">Gaussian Blur</option>
+          <option value="bilateral">Bilateral Filter</option>
+          <option value="median">Median Filter</option>
+          <option value="auto">Auto (Apply All Defenses)</option>
+        </select>
+      </label>
 
       {/* 防禦圖片按鈕 */}
       <button
@@ -182,7 +206,11 @@ const App = () => {
       {defendedImage && (
         <div className="mt-4 text-center">
           <h2 className="text-lg font-semibold">Defended Image:</h2>
-          <img src={defendedImage} alt="Defended" className="w-64 h-auto mt-2" />
+          <img
+            src={defendedImage}
+            alt="Defended"
+            className="w-64 h-auto mt-2"
+          />
           <a href={defendedImage} download="defended_image.png">
             <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">
               Download Defended Image
