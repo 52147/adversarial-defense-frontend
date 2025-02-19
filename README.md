@@ -1,4 +1,3 @@
-## **📌 Frontend - React（English）**
 # 🎨 Adversarial Defense Frontend (React)
 
 This frontend is built with **React.js** and interacts with the **FastAPI backend**. It provides a **user-friendly UI** for:
