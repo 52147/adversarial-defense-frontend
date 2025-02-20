@@ -94,7 +94,7 @@ const App = () => {
 
   return (
     <div className="flex flex-col items-center p-6 max-w-2xl mx-auto">
-      <div className="text-4xl font-bold mb-1">Adversarial Defense Toolkit</div>
+      <div className="text-4xl font-bold mb-1 text-center">Adversarial Defense Toolkit</div>
       <StepGuide />
       <ContactButton />
       {/* Epsilon 說明表 */}
