@@ -94,7 +94,9 @@ const App = () => {
 
   return (
     <div className="flex flex-col items-center p-6 max-w-2xl mx-auto">
-      <div className="text-4xl font-bold mb-1 text-center">Adversarial Defense Toolkit</div>
+      <div className="text-4xl font-bold mb-1 text-center">
+        Adversarial Defense Toolkit
+      </div>
       <StepGuide />
       <ContactButton />
       {/* Epsilon 說明表 */}
@@ -202,6 +204,8 @@ const App = () => {
             <option value="gaussian">Gaussian Blur</option>
             <option value="bilateral">Bilateral Filter</option>
             <option value="median">Median Filter</option>
+            <option value="jpeg">JPEG Compression</option>{" "}
+            {/* ✅ 新增 JPEG Compression */}
             <option value="auto">Auto (Apply All Defenses)</option>
           </select>
         </label>
