@@ -29,7 +29,7 @@ const App = () => {
     formData.append("defense_method", selectedDefense); // 傳遞防禦方式
 
     try {
-      const response = await fetch("http://localhost:8000/defend/", {
+      const response = await fetch("https://adversarial-defense-backend.onrender.com/defend/", {
         method: "POST",
         body: formData,
       });
@@ -53,7 +53,7 @@ const App = () => {
   const handleGenerate = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/generate_adversarial_example?epsilon=${epsilon}`
+        `https://adversarial-defense-backend.onrender.com/generate_adversarial_example?epsilon=${epsilon}`
       );
       const blob = await response.blob();
       const imgUrl = URL.createObjectURL(blob);
@@ -80,7 +80,7 @@ const App = () => {
       const formData = new FormData();
       formData.append("file", defendedFile);
 
-      const classifyResponse = await fetch("http://127.0.0.1:8000/classify/", {
+      const classifyResponse = await fetch("https://adversarial-defense-backend.onrender.com/classify/", {
         method: "POST",
         body: formData,
       });
